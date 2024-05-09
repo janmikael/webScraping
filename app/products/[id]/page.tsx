@@ -62,5 +62,5 @@ const ProductDetails = async ({ params: { id } }: Props) => {
   );
 };
 
-// Exporting the ProductDetails component as the default export.
+// Exporting the ProductDetails component as the default export..
 export default ProductDetails;
