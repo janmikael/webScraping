@@ -1,5 +1,5 @@
 // Importing the getProductById function from a module located in the "@/lib/actions" directory.
-import { getProductById } from "@/lib/actions";
+import { getProductById, getSimilarProducts } from "@/lib/actions";
 
 // Importing the redirect function from the "next/navigation" module.
 import { redirect } from "next/navigation";
@@ -12,6 +12,7 @@ import Link from "next/link";
 import { Product } from "@/types";
 import { formatNumber } from "@/lib/util";
 import PriceInfoCard from "@/components/PriceInfoCard";
+import ProductCard from "@/components/ProductCard";
 
 // Defining the Props type, which is an object with a params property of type { id: string }.
 type Props = {
@@ -25,6 +26,8 @@ const ProductDetails = async ({ params: { id } }: Props) => {
 
   // Redirecting to the homepage if the product is not found.
   if (!product) redirect('/');
+
+  const similarProducts = await getSimilarProducts(id);
 
   // Returning JSX for rendering the product details.
   return (
@@ -70,7 +73,7 @@ const ProductDetails = async ({ params: { id } }: Props) => {
                 />
 
                   <p className="text-base font-semibold text-[#D46F77]">
-                  {product.reviewsCount || '100'}
+                  {product.reviewsCount}
                 </p>
             </div>
 
@@ -135,7 +138,7 @@ const ProductDetails = async ({ params: { id } }: Props) => {
                   height={16}
                   />
                   <p className="text-sm text-secondary font-semibold">
-                    {product.reviewsCount || '100'} Reviews
+                    {product.reviewsCount} Reviews
                   </p>
                 </div>
               </div>
@@ -166,14 +169,14 @@ const ProductDetails = async ({ params: { id } }: Props) => {
                 />
 
                 <PriceInfoCard
-                  title="Current Price"
+                  title="Highest Price"
                   iconSrc="/assets/icons/arrow-up.svg"
                   value={`${product.currency} ${formatNumber(product.highestPrice)}`}
                  
                 />
 
                 <PriceInfoCard
-                  title="Current Price"
+                  title="Lowest Price"
                   iconSrc="/assets/icons/arrow-down.svg"
                   value={`${product.currency} ${formatNumber(product.lowestPrice)}`}
                 
@@ -186,6 +189,49 @@ const ProductDetails = async ({ params: { id } }: Props) => {
 
         </div>
       </div>
+
+          <div className="flex flex-col gap-16  ">
+
+            <div className="flex flex-col gap-5">
+
+              <h3 className="text-2xl text-secondary font-semibold">
+              Product Description
+              </h3>
+
+              <div className="flex flex-col gap-4">
+                {product?.description?.split('\n')}
+              </div>
+
+            </div>
+
+            <button className="btn w-fit mx-auto flex items-center justify-center gap-3 min-w-[200px]">
+              <Image
+              src="/assets/icons/bag.svg"
+              alt="check"
+              width={22}
+              height={22}
+              />
+
+              <Link href="/" className="text-base text-white">
+              Buy Now
+              </Link>
+            </button>
+
+
+
+          </div>
+
+          {similarProducts && similarProducts?.length > 0 && (
+        <div className="py-14 flex flex-col gap-2 w-full">
+          <p className="section-text">Similar Products</p>
+
+          <div className="flex flex-wrap gap-10 mt-7 w-full">
+            {similarProducts.map((product) => (
+              <ProductCard key={product._id} product={product} />
+            ))}
+            </div>
+          </div>
+        )}
 
 
     </div>

@@ -82,3 +82,25 @@ catch (error)
     { console.error('Error fetching products:', error); throw error; // Rethrow the error to handle it in the calling code } }
 }
 }
+
+
+export async function getSimilarProducts(productId: string) { 
+    try { 
+        connectToDB(); 
+
+
+    const currentProduct = await Product.findById(productId)
+
+    if(!currentProduct) return null;
+
+    const similarProducts = await Product.find({_id: { $ne: productId},
+    }).limit(3);
+
+
+    return  similarProducts; 
+    
+} 
+catch (error) 
+    { console.error('Error fetching products:', error); throw error; // Rethrow the error to handle it in the calling code } }
+}
+}
