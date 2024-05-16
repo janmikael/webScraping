@@ -13,6 +13,7 @@ import { Product } from "@/types";
 import { formatNumber } from "@/lib/util";
 import PriceInfoCard from "@/components/PriceInfoCard";
 import ProductCard from "@/components/ProductCard";
+import Modal from "@/components/Modal";
 
 // Defining the Props type, which is an object with a params property of type { id: string }.
 type Props = {
@@ -185,7 +186,7 @@ const ProductDetails = async ({ params: { id } }: Props) => {
               </div>
             </div>
 
-            Modal
+            <Modal productId={id}/>
 
         </div>
       </div>
