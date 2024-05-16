@@ -5,7 +5,7 @@ import { scrapeAmazonProduct } from "@/lib/scraper";
 import { getAveragePrice, getEmailNotifType, getHighestPrice, getLowestPrice } from "@/lib/util";
 import { NextResponse } from "next/server";
 
-export const maxDuration = 300; //5mins
+export const maxDuration = 60; //5mins
 export const dynamic = 'force-dynamic'
 export const revalidate = 0;
 
