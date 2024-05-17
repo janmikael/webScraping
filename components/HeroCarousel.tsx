@@ -18,9 +18,9 @@ const HeroCarousel = () => { // Defining a functional component named HeroCarous
     <div className="hero-carousel" > 
         <Carousel // Using the Carousel component from react-responsive-carousel
             showThumbs={false} // Hiding the thumbnail navigation
-            //autoPlay // Enabling automatic slideshow
+            autoPlay  //Enabling automatic slideshow
             infiniteLoop // Enabling infinite looping of slides
-           // interval={2000} // Setting interval for automatic slide change (in milliseconds)
+            interval={2000} // Setting interval for automatic slide change (in milliseconds)
             showArrows={false} // Hiding navigation arrows
             showStatus={false} // Hiding status indicators
         >
