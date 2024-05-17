@@ -1,25 +1,46 @@
 import mongoose from 'mongoose';
 
+let isConnected = false; // Variable to track the connection status
 
- let isConnected = false; //variable to track the connection status
+export const connectToDB = async () => {
+  mongoose.set('strictQuery', true);
 
- export const connectToDB =  async () => {
-    mongoose.set('strictQuery', true);
+  if (!process.env.MONGODB_URI) {
+    console.log('MONGODB_URI is not defined');
+    return;
+  }
 
-    if(!process.env.MONGODB_URI) return console.log('MONGODB_URI is not defined');
+  if (isConnected) {
+    console.log('=> using existing database connection');
+    return;
+  }
 
-    if(isConnected) return console.log('=> using existing database connection');
+  try {
+    // Connect to MongoDB using the provided URI
+    await mongoose.connect(process.env.MONGODB_URI!, {
+      useNewUrlParser: true, // This is no longer necessary in Mongoose 6.x, but harmless
+      useUnifiedTopology: true, // Use new server discovery and monitoring engine
+    } as any); // Typecast options to 'any'
 
-    try {
-        await mongoose.connect(process.env.MONGODB_URI!);
-        
-        isConnected = true;
+    isConnected = true;
+    console.log('MongoDB Connected');
+    
+    // Optional: Add event listeners to monitor the connection status
+    mongoose.connection.on('connected', () => {
+      console.log('Mongoose connected to DB');
+    });
 
-        console.log('MongoDB Connected');
+    mongoose.connection.on('error', (err) => {
+      console.error('Mongoose connection error:', err);
+    });
 
-    } catch (error) {
+    mongoose.connection.on('disconnected', () => {
+      console.log('Mongoose disconnected');
+      isConnected = false;
+    });
 
-        console.log(error)
-        
-    }
- }
+  } catch (error) {
+    // Handle connection errors
+    console.error('Error connecting to MongoDB:', error);
+  }
+};
